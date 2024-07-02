@@ -2,9 +2,10 @@ version: "3.7"
 services:
   pinot-server:
     image: apachepinot/pinot:1.1.0
-    command: "StartServer -zkAddress pinot-zookeeper:2181"
+    command: "StartServer -zkAddress pinot-zookeeper1:2181,pinot-zookeeper2:2181,pinot-zookeeper3:2181"
     restart: unless-stopped
     container_name: "pinot-server"
+    hostname: pinot-server
     ports:
       - "8098:8098"
     environment:

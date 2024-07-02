@@ -2,17 +2,23 @@ version: "3.7"
 services:
   pinot-zookeeper:
     image: zookeeper:3.5.6
-    container_name: pinot-zookeeper
+    container_name: "pinot-zookeeper${ZOOKEEPER_ID}"
+    hostname: "pinot-zookeeper${ZOOKEEPER_ID}"
     ports:
       - "2181:2181"
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
+      ZOO_MY_ID: ${ZOOKEEPER_ID}
+      ZOO_STANDALONE_ENABLED: true
+      ZOO_ADMINSERVER_ENABLEDz: true
+      ZOO_SERVERS: server.1=pinot-zookeeper1:2888:3888;2181 server.2=pinot-zookeeper2:2888:3888;2181 server.3=pinot-zookeeper3:2888:3888;2181
   pinot-broker:
     image: apachepinot/pinot:1.1.0
-    command: "StartBroker -zkAddress pinot-zookeeper:2181"
+    command: "StartBroker -zkAddress pinot-zookeeper1:2181,pinot-zookeeper2:2181,pinot-zookeeper3:2181"
     restart: unless-stopped
     container_name: "pinot-broker"
+    hostname: pinot-broker
     ports:
       - "8099:8099"
     environment:
